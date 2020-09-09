@@ -1,6 +1,6 @@
 {
   "name": "asc_asteroids",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple asteroid shooter game written in AssemblyScript",
   "main": "build/asteroidshooter.min.js",
   "dependencies": {
@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "scripts": {
     "assembledebug": "asc ./src/AsteroidShooter.asc --extension asc --debug --runtime stub --importMemory --sourceMap -o AsteroidShooter.wasm",
