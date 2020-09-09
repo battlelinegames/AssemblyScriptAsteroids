@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Asteroid Game</title>
+</head>
+
+<body bgcolor="#222">
+  <center>
+    <canvas id="cnvs" width="512" height="512"></canvas>
+  </center>
+  <script type="module" src='asteroidshooter.min.js'></script>
+  <script type="module">
+    import { startGame } from './asteroidshooter.min.js';
+    startGame('AsteroidShooter.wasm');
+  </script>
+</body>
+
+</html>
