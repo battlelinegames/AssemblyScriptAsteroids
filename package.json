@@ -20,7 +20,7 @@
     "postassemble": "cp AsteroidShooter.wasm ./build/",
     "esl": "eslint src/**/*.js",
     "prebuild": "rimraf build",
-    "build": "remove_try.sh && rollup -c",
+    "build": "remove_try.sh && rollup -c && cp -avr src/audio ./build/audio",
     "postbuild": "mv ./src/ASWebGLue-backup.js ./src/ASWebGLue.js && npm run assemble && cp ./src/asteroid.html ./build/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
