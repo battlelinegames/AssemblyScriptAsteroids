@@ -17,18 +17,25 @@ In this app, the JavaScript file AsteroidGame.js imports the following two funct
 import { initASWebGLue, ASWebGLReady } from './ASWebGLue.js';
 ```
 
+The ```initASWebGLue``` function must be passed your import object.  It populates the object with the glue code the game uses to make calls from AssemblyScript to WebGL.  This file comes from an early version of the [ASWebGLue](https://github.com/battlelinegames/ASWebGLue).  This version of the AssemblyScript WebGL glue code is not complete, but has all of the functions required by this Asteroids game clone.  The JavaScript glue code is located in the [ASWebGLue.js](https://github.com/battlelinegames/AssemblyScriptAsteroids/blob/master/src/ASWebGLue.js) file.  The code in AsteroidGame.js imports the functions initASWebGLue and ASWebGLReady.  
 
-
+Until ```externref``` becomes available in WebAssembly, JavaScript objects like WebGLRenderingContext and WebGLProgram cannot be passed into or out of WebAssembly, so the glue code passes indexes into arrays for the WebGL objects that it requires.  The arrays are defined with the following JS code:
+```
+  importObject.webgl.contextArray = [];
+  importObject.webgl.textureArray = [];
+  importObject.webgl.programArray = [];
+  importObject.webgl.shaderArray = [];
+  importObject.webgl.bufferArray = [];
+  importObject.webgl.frameBufferArray = [];
+  importObject.webgl.renderBufferArray = [];
+  importObject.webgl.uniformLocationArray = [];
 
 ```
-  <script type="module" src='asteroidshooter.min.js'></script>
-  <script type="module">
-    import { startGame } from './asteroidshooter.min.js';
-    startGame('AsteroidShooter.wasm');
-  </script>
-```
-**CHR** contains the sprite (character) data that gets loaded into the          
+Most of the functions mirror the JavaScript WebGL functions.  One exception is the ```canvas.getContext``` function.  Instead of getting a context from a canvas object, the function ```createContextFromCanvas``` takes a canvas id and a context type string and both retrieves the canvas from the DOM and creates a rendering context on that canvas.  Inside of AsteroidsGame.js the JavaScript must do several things that the AssemblyScript can not do.  These tasks include capturing keyboard input, playing sound effects and the game's music, and initializing and calling the WebAssembly module.
 
+# WebGL bindings
+
+The WebGL bindings are located in the webgl.asc file.  The file declares the functions defined in the ASWebGLue.js code.  This allows the AssemblyScript to make calls to the WebGL from AssemblyScript.
 
 # SHAMELESS PLUG from Rick Battagline            
 
@@ -37,8 +44,6 @@ I make web games for a living, and if you want to help me out please play them w
 https://www.classicsolitaire.com                             
 
 https://www.icardgames.com                                    
-
-https://www.candymahjong.com                                  
 
 https://www.embed.com                                         
 

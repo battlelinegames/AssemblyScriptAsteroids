@@ -167,13 +167,7 @@ function getAudio() {
 
 // THE startGame FUNCTION CALLS initASWebGLue AND INSTANTIATES THE WASM MODULE
 export function startGame(wasm_file) {
-  /*
-  let laser = new Audio("./audio/laser.mp3");
-  let explosion = new Audio("./audio/explosion.mp3");
 
-  soundArray.push(laser);
-  soundArray.push(explosion);
-  */
   getAudio();
 
   const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
@@ -210,7 +204,7 @@ export function startGame(wasm_file) {
     }
   };
 
-  initASWebGLue(importObject, exports);
+  initASWebGLue(importObject);
 
   (async () => {
     // use WebAssembly.instantiateStreaming in combination with
