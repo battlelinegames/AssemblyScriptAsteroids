@@ -33,11 +33,11 @@ Until ```externref``` becomes available in WebAssembly, JavaScript objects like 
 ```
 Most of the functions mirror the JavaScript WebGL functions.  One exception is the ```canvas.getContext``` function.  Instead of getting a context from a canvas object, the function ```createContextFromCanvas``` takes a canvas id and a context type string and both retrieves the canvas from the DOM and creates a rendering context on that canvas.  Inside of AsteroidsGame.js the JavaScript must do several things that the AssemblyScript can not do.  These tasks include capturing keyboard input, playing sound effects and the game's music, and initializing and calling the WebAssembly module.
 
-# WebGL bindings
+### WebGL bindings
 
 The WebGL bindings are located in the webgl.asc file.  The file declares the functions defined in the ASWebGLue.js code.  This allows the AssemblyScript to make calls to the WebGL from AssemblyScript.
 
-# SHAMELESS PLUG from Rick Battagline            
+## SHAMELESS PLUG from Rick Battagline            
 
 I make web games for a living, and if you want to help me out please play them when you're bored at work. (win, win)                                  
 
