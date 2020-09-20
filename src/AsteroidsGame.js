@@ -30,24 +30,24 @@ var audioCtx = new AudioContext();
 
 // When a keydown event is pressed, set the bool for that key to true
 document.addEventListener('keydown', (event) => {
-  if (event.code == 'ArrowLeft') {
+  if (event.code === 'ArrowLeft') {
     leftKeyPress = true;
   }
-  if (event.code == 'ArrowUp') {
+  if (event.code === 'ArrowUp') {
     upKeyPress = true;
   }
-  if (event.code == 'ArrowRight') {
+  if (event.code === 'ArrowRight') {
     rightKeyPress = true;
   }
-  if (event.code == 'ArrowDown') {
+  if (event.code === 'ArrowDown') {
     downKeyPress = true;
   }
-  if (event.code == 'Space') {
+  if (event.code === 'Space') {
     spaceKeyPress = true;
   }
 
   // The sound will not be started until the first key is pressed.
-  if (song.ready == true) {
+  if (song.ready === true) {
     song.start(0);
     song.ready = false;
   }
@@ -56,19 +56,19 @@ document.addEventListener('keydown', (event) => {
 
 // When a keyup event is pressed, set the bool for that key to false
 document.addEventListener('keyup', (event) => {
-  if (event.code == 'ArrowLeft') {
+  if (event.code === 'ArrowLeft') {
     leftKeyPress = false;
   }
-  if (event.code == 'ArrowUp') {
+  if (event.code === 'ArrowUp') {
     upKeyPress = false;
   }
-  if (event.code == 'ArrowRight') {
+  if (event.code === 'ArrowRight') {
     rightKeyPress = false;
   }
-  if (event.code == 'ArrowDown') {
+  if (event.code === 'ArrowDown') {
     downKeyPress = false;
   }
-  if (event.code == 'Space') {
+  if (event.code === 'Space') {
     spaceKeyPress = false;
   }
 });
@@ -116,7 +116,7 @@ async function getAudio() {
 
 }
 
-// THE startGame FUNCTION CALLS initASWebGLue AND INSTANTIATES THE WASM MODULE
+// the startGame function calls initASWebGLue and instantiates the wasm module
 export function startGame(wasm_file) {
 
   // load the audio when the game is started.
@@ -129,7 +129,7 @@ export function startGame(wasm_file) {
       memory: memory,
       seed: Date.now,
       playLaser: function () {
-        if (laser.ready == true) {
+        if (laser.ready === true) {
           laser.start(0);
           laser.ready = false;
           setTimeout(function () {
@@ -142,7 +142,7 @@ export function startGame(wasm_file) {
         }
       },
       playExplosion: function () {
-        if (explosion.ready == true) {
+        if (explosion.ready === true) {
           explosion.start(0);
           explosion.ready = false;
           setTimeout(function () {
