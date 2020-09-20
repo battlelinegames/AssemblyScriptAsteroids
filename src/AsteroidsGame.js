@@ -86,7 +86,6 @@ function renderFrame() {
 function getAudio() {
   song = new Audio('./audio/song-hq.mp3');
   song.loop = true;
-  song.ready = false;
   song.addEventListener("canplaythrough", event => {
     song.ready = true;
   });
