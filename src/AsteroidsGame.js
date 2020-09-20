@@ -15,10 +15,6 @@ var downKeyPress = false;
 var spaceKeyPress = false;
 
 // Sound related variables.  A song loop, laser and explosion sound.
-// Are the sounds ready to play
-var song_ready = false;
-var laser_ready = false;
-var explosion_ready = false;
 
 // The buffer source objects
 var song;
@@ -51,9 +47,9 @@ document.addEventListener('keydown', (event) => {
   }
 
   // The sound will not be started until the first key is pressed.
-  if (song_ready == true) {
+  if (song.ready == true) {
     song.start(0);
-    song_ready = false;
+    song.ready = false;
   }
 
 });
@@ -95,6 +91,7 @@ function renderFrame() {
   requestAnimationFrame(renderFrame);
 }
 
+// get and decode an individual audio file
 async function getAudioSource(file_location) {
   let buffer_source = audioCtx.createBufferSource();
   let data = await fetch(file_location);
@@ -106,16 +103,16 @@ async function getAudioSource(file_location) {
 
 // load audio files
 async function getAudio() {
-  song = await getAudioSource('./audio/song-hq.mp3')
-  song_ready = true;
+  song = await getAudioSource('./audio/song-hq.mp3');
+  song.ready = true;
 
-  laser = await getAudioSource('./audio/laser.mp3')
+  laser = await getAudioSource('./audio/laser.mp3');
   laser_buffer = laser.buffer;
-  laser_ready = true;
+  laser.ready = true;
 
-  explosion = await getAudioSource('./audio/explosion.mp3')
+  explosion = await getAudioSource('./audio/explosion.mp3');
   explosion_buffer = explosion.buffer;
-  explosion_ready = true;
+  explosion.ready = true;
 
 }
 
@@ -132,27 +129,27 @@ export function startGame(wasm_file) {
       memory: memory,
       seed: Date.now,
       playLaser: function () {
-        if (laser_ready == true) {
+        if (laser.ready == true) {
           laser.start(0);
-          laser_ready = false;
+          laser.ready = false;
           setTimeout(function () {
             let buffer = laser_buffer;
             laser = audioCtx.createBufferSource();
             laser.buffer = buffer;
             laser.connect(audioCtx.destination);
-            laser_ready = true;
+            laser.ready = true;
           }, 100);
         }
       },
       playExplosion: function () {
-        if (explosion_ready == true) {
+        if (explosion.ready == true) {
           explosion.start(0);
-          explosion_ready = false;
+          explosion.ready = false;
           setTimeout(function () {
             explosion = audioCtx.createBufferSource();
             explosion.buffer = explosion_buffer;
             explosion.connect(audioCtx.destination);
-            explosion_ready = true;
+            explosion.ready = true;
           }, 100);
         }
       },
