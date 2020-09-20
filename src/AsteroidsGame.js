@@ -114,10 +114,14 @@ export function startGame(wasm_file) {
       memory: memory,
       seed: Date.now,
       playLaser: function () {
-        laser.play();
+        if (laser.ready === true) {
+          laser.play();
+        }
       },
       playExplosion: function () {
-        explosion.play();
+        if (explosion.ready === true) {
+          explosion.play();
+        }
       },
     }
   };
