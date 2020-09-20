@@ -14,19 +14,10 @@ var upKeyPress = false;
 var downKeyPress = false;
 var spaceKeyPress = false;
 
-// Sound related variables.  A song loop, laser and explosion sound.
-
-// The buffer source objects
+// The Audio objects
 var song;
 var laser;
 var explosion;
-
-// The buffers
-var laser_buffer;
-var explosion_buffer;
-
-// The audio context
-var audioCtx = new AudioContext();
 
 // When a keydown event is pressed, set the bool for that key to true
 document.addEventListener('keydown', (event) => {
@@ -48,7 +39,7 @@ document.addEventListener('keydown', (event) => {
 
   // The sound will not be started until the first key is pressed.
   if (song.ready === true) {
-    song.start(0);
+    song.play();
     song.ready = false;
   }
 
@@ -91,29 +82,24 @@ function renderFrame() {
   requestAnimationFrame(renderFrame);
 }
 
-// get and decode an individual audio file
-async function getAudioSource(file_location) {
-  let buffer_source = audioCtx.createBufferSource();
-  let data = await fetch(file_location);
-  let array_buffer_data = await data.arrayBuffer();
-  buffer_source.buffer = await audioCtx.decodeAudioData(array_buffer_data);
-  buffer_source.connect(audioCtx.destination);
-  return buffer_source;
-}
-
 // load audio files
-async function getAudio() {
-  song = await getAudioSource('./audio/song-hq.mp3');
-  song.ready = true;
+function getAudio() {
+  song = new Audio('./audio/song-hq.mp3');
+  song.loop = true;
+  song.ready = false;
+  song.addEventListener("canplaythrough", event => {
+    song.ready = true;
+  });
 
-  laser = await getAudioSource('./audio/laser.mp3');
-  laser_buffer = laser.buffer;
-  laser.ready = true;
+  laser = new Audio('./audio/laser.mp3');
+  laser.addEventListener("canplaythrough", event => {
+    laser.ready = true;
+  });
 
-  explosion = await getAudioSource('./audio/explosion.mp3');
-  explosion_buffer = explosion.buffer;
-  explosion.ready = true;
-
+  explosion = new Audio('./audio/explosion.mp3');
+  explosion.addEventListener("canplaythrough", event => {
+    explosion.ready = true;
+  });
 }
 
 // the startGame function calls initASWebGLue and instantiates the wasm module
@@ -129,29 +115,10 @@ export function startGame(wasm_file) {
       memory: memory,
       seed: Date.now,
       playLaser: function () {
-        if (laser.ready === true) {
-          laser.start(0);
-          laser.ready = false;
-          setTimeout(function () {
-            let buffer = laser_buffer;
-            laser = audioCtx.createBufferSource();
-            laser.buffer = buffer;
-            laser.connect(audioCtx.destination);
-            laser.ready = true;
-          }, 100);
-        }
+        laser.play();
       },
       playExplosion: function () {
-        if (explosion.ready === true) {
-          explosion.start(0);
-          explosion.ready = false;
-          setTimeout(function () {
-            explosion = audioCtx.createBufferSource();
-            explosion.buffer = explosion_buffer;
-            explosion.connect(audioCtx.destination);
-            explosion.ready = true;
-          }, 100);
-        }
+        explosion.play();
       },
     }
   };
