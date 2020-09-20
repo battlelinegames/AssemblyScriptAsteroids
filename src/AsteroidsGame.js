@@ -1,28 +1,38 @@
 
 import { initASWebGLue, ASWebGLReady } from './ASWebGLue.js';
 
+// The last_time variable is used to track the time between frame renders.
 var last_time = 0;
+
+// The exports object contains the functions exported from the WASM module
 var exports = {};
 
-// LISTEN TO KEYBOARD EVENTS
+// Are any of the arrow keys or the space bars pressed.
 var leftKeyPress = false;
 var rightKeyPress = false;
 var upKeyPress = false;
 var downKeyPress = false;
 var spaceKeyPress = false;
 
-var soundArray = [];
-
+// Sound related variables.  A song loop, laser and explosion sound.
+// Are the sounds ready to play
 var song_ready = false;
-var song;
 var laser_ready = false;
-var laser;
-var laser_buffer;
 var explosion_ready = false;
+
+// The buffer source objects
+var song;
+var laser;
 var explosion;
+
+// The buffers
+var laser_buffer;
 var explosion_buffer;
+
+// The audio context
 var audioCtx = new AudioContext();
 
+// When a keydown event is pressed, set the bool for that key to true
 document.addEventListener('keydown', (event) => {
   if (event.code == 'ArrowLeft') {
     leftKeyPress = true;
@@ -40,6 +50,7 @@ document.addEventListener('keydown', (event) => {
     spaceKeyPress = true;
   }
 
+  // The sound will not be started until the first key is pressed.
   if (song_ready == true) {
     song.start(0);
     song_ready = false;
@@ -47,6 +58,7 @@ document.addEventListener('keydown', (event) => {
 
 });
 
+// When a keyup event is pressed, set the bool for that key to false
 document.addEventListener('keyup', (event) => {
   if (event.code == 'ArrowLeft') {
     leftKeyPress = false;
@@ -65,7 +77,7 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-// EACH FRAME RENDER RUNS THIS FUNCTION
+// Each frame render runs this function
 function renderFrame() {
   let delta = 0;
   if (last_time !== 0) {
@@ -73,101 +85,44 @@ function renderFrame() {
   }
   last_time = new Date().getTime();
 
+  // call the LoopCallback function in the WASM module
   exports.LoopCallback(delta,
     leftKeyPress, rightKeyPress,
     upKeyPress, downKeyPress,
     spaceKeyPress);
 
+  // requestAnimationFrame calls renderFrame the next time a frame is rendered
   requestAnimationFrame(renderFrame);
 }
 
-function getAudio() {
-  song = audioCtx.createBufferSource();
-  laser = audioCtx.createBufferSource();
-  explosion = audioCtx.createBufferSource();
+async function getAudioSource(file_location) {
+  let buffer_source = audioCtx.createBufferSource();
+  let data = await fetch(file_location);
+  let array_buffer_data = await data.arrayBuffer();
+  buffer_source.buffer = await audioCtx.decodeAudioData(array_buffer_data);
+  buffer_source.connect(audioCtx.destination);
+  return buffer_source;
+}
 
-  let request = new XMLHttpRequest();
+// load audio files
+async function getAudio() {
+  song = await getAudioSource('./audio/song-hq.mp3')
+  song_ready = true;
 
-  request.open('GET', './audio/song-hq.mp3', true);
+  laser = await getAudioSource('./audio/laser.mp3')
+  laser_buffer = laser.buffer;
+  laser_ready = true;
 
-  request.responseType = 'arraybuffer';
+  explosion = await getAudioSource('./audio/explosion.mp3')
+  explosion_buffer = explosion.buffer;
+  explosion_ready = true;
 
-
-  request.onload = function () {
-    let audioData = request.response;
-
-    audioCtx.decodeAudioData(audioData, function (buffer) {
-      song.buffer = buffer;
-
-      song.connect(audioCtx.destination);
-      song.loop = true;
-      song_ready = true;
-    },
-
-      function (e) { console.log("Error with decoding audio data" + e.err); });
-
-    // BEGIN LASER
-
-    let laser_request = new XMLHttpRequest();
-
-    laser_request.open('GET', './audio/laser.mp3', true);
-
-    laser_request.responseType = 'arraybuffer';
-
-
-    laser_request.onload = function () {
-      let laser_audioData = laser_request.response;
-
-      audioCtx.decodeAudioData(laser_audioData, function (buffer) {
-        laser.buffer = buffer;
-        laser_buffer = buffer;
-
-        laser.connect(audioCtx.destination);
-        laser_ready = true;
-      },
-
-        function (e) { console.log("Error with decoding audio data" + e.err); });
-
-    }
-
-    laser_request.send();
-
-    // BEGIN EXP
-    let explosion_request = new XMLHttpRequest();
-
-    explosion_request.open('GET', './audio/explosion.mp3', true);
-
-    explosion_request.responseType = 'arraybuffer';
-
-    explosion_request.onload = function () {
-      let explosion_audioData = explosion_request.response;
-
-      audioCtx.decodeAudioData(explosion_audioData, function (buffer) {
-        explosion.buffer = buffer;
-        explosion_buffer = buffer;
-
-        explosion.connect(audioCtx.destination);
-        explosion_ready = true;
-      },
-
-        function (e) { console.log("Error with decoding audio data" + e.err); });
-
-    }
-
-    explosion_request.send();
-
-    // END EXP
-
-    laser_request.send();
-    // END LASER
-  }
-
-  request.send();
 }
 
 // THE startGame FUNCTION CALLS initASWebGLue AND INSTANTIATES THE WASM MODULE
 export function startGame(wasm_file) {
 
+  // load the audio when the game is started.
   getAudio();
 
   const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
