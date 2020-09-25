@@ -37,12 +37,6 @@ document.addEventListener('keydown', (event) => {
     spaceKeyPress = true;
   }
 
-  // The sound will not be started until the first key is pressed.
-  if (song.ready === true) {
-    song.play();
-    song.ready = false;
-  }
-
 });
 
 // When a keyup event is pressed, set the bool for that key to false
@@ -116,6 +110,11 @@ export function startGame(wasm_file) {
       playLaser: function () {
         if (laser.ready === true) {
           laser.play();
+        }
+        // The sound will not be started until the first key is pressed.
+        if (song.ready === true) {
+          song.play();
+          song.ready = false;
         }
       },
       playExplosion: function () {

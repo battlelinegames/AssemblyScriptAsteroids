@@ -393,6 +393,15 @@ export function initASWebGLue(importObject) {
   importObject.webgl.compileShader = (ctx, shader) => {
     try {
       webgl.contextArray[ctx].compileShader(webgl.shaderArray[shader]);
+      var compiled = webgl.contextArray[ctx].getShaderParameter(webgl.shaderArray[shader],
+        webgl.contextArray[ctx].COMPILE_STATUS);
+      if (compiled == true) {
+        console.log('shader compiled');
+      }
+      else {
+        var compilationLog = webgl.contextArray[ctx].getShaderInfoLog(webgl.shaderArray[shader]);
+        console.log('Shader compiler log: ' + compilationLog);
+      }
     } catch (err) {
       console.log("compileShader error");
       console.error(err);
@@ -1030,7 +1039,7 @@ export function initASWebGLue(importObject) {
 
       if (!webgl.contextArray[ctx].getProgramParameter(webgl.programArray[program],
         webgl.contextArray[ctx].LINK_STATUS)) {
-        console.log(arg[0].getProgramInfoLog(webgl.programArray[program]));
+        console.log(webgl.contextArray[ctx].getProgramInfoLog(webgl.programArray[program]));
       }
     } catch (err) {
       console.log("linkProgram error");
@@ -1564,9 +1573,13 @@ export function initASWebGLue(importObject) {
   }
 
   // expiramental webgl2
-  importObject.webgl.uniform1ui = (ctx, location, v0) => {
-    alert("uniform1ui not implemented (expiramental)");
-
+  importObject.webgl.uniform1ui = (ctx, location, x) => {
+    try {
+      return webgl.contextArray[ctx].uniform1ui(webgl.uniformLocationArray[location], x);
+    } catch (err) {
+      console.log("uniform1ui error");
+      console.error(err);
+    } // end catch
   }
 
   // expiramental webgl2
