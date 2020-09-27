@@ -135,7 +135,6 @@ export function startGame(wasm_file) {
       importObject);
     exports = obj.instance.exports;
     ASWebGLReady(obj, importObject);
-    exports.StartGame();
     requestAnimationFrame(renderFrame);
   })();
 }
