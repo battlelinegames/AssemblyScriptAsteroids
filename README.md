@@ -3,7 +3,7 @@ I'm currently working on bringing WebGL to [AssemblyScript](https://www.assembly
 
 ![alt text](https://github.com/battlelinegames/AssemblyScriptAsteroids/blob/master/images/AssemblyScriptAsteroids.png?raw=true "AssemblyScript Asteroids Game")
 
-[Play Online](https://embed.com/wasm/asteroid.html)
+[Play Online](https://wasmbook.com/asteroid.html)
 
 ## WebGL
 There are two files in this project that allow you to use WebGL in AssemblyScript.  The bindings in this project are incomplete.  I will be adding more bindings into the ASWebGLue project on Github.  If there is functionality you would like to see added to ASWebGLue, please contact me on twitter: [@battagline](https://twitter.com/battagline) or on the AssemblyScript [Discord](https://discord.gg/hvadbD).  Using WebGL requires the JavaScript glue file ASWebGLue.js and the AssemblyScript bindings in webgl.asc.  This asteroid shooter game does not have a lot of features.  I created it as a proof of concept for using WebGL from within AssemblyScript.  My goal is to create a series of tutorials starting with a walkthrough of how I created this game and the WebGL bindings.
@@ -45,5 +45,5 @@ https://www.classicsolitaire.com
 
 https://www.icardgames.com                                    
 
-https://www.embed.com                                         
+https://wasmbook.com                                      
 
